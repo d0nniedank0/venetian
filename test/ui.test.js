@@ -57,6 +57,16 @@ test("page boots with guide, drop zone, footer; no workbench", () => {
   assertNoErrors();
 });
 
+test("masthead has an accessible blind-slat brand mark", () => {
+  const mark = d.querySelector(".brand-lockup .brand-mark");
+  assert.ok(mark, "inline brand mark exists beside the wordmark");
+  assert.equal(mark.tagName.toLowerCase(), "svg");
+  assert.equal(mark.getAttribute("aria-hidden"), "true");
+  assert.equal(mark.querySelectorAll(".slat").length, 4);
+  assert.ok(d.querySelector(".brand-lockup .wordmark").textContent.includes("Venetian"));
+  assertNoErrors();
+});
+
 test("drop a file -> workbench opens, render path runs without errors", () => {
   const fakeFile = new w.File([new Uint8Array(8)], "bittensor flow.png", { type: "image/png" });
   const ev = new w.Event("drop", { bubbles: true });

@@ -39,11 +39,22 @@ body {
   margin: 0 auto;
   padding: 44px 20px 8px;
 }
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 6px;
+}
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+}
 .logo {
   font-size: 40px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  margin: 0 0 6px;
+  margin: 0;
   color: var(--indigo);
 }
 .tagline {
@@ -252,6 +263,8 @@ input[type="range"] {
 .hidden { display: none !important; }
 
 @media (max-width: 640px) {
+  .brand-lockup { gap: 10px; }
+  .brand-mark { width: 35px; height: 35px; }
   .logo { font-size: 32px; }
   .control-row { gap: 16px; }
   .footer { flex-direction: column; }
