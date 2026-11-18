@@ -6,6 +6,8 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("path");
 const V = require(path.join(__dirname, "..", "js", "engine.js"));
+const Z = require(path.join(__dirname, "..", "js", "zip.js"));
+V.buildZip = Z.buildZip; // engine surface exposes the tested zip API
 
 test("native plan crops width to a multiple of N, centered (Bittensor fixture)", () => {
   const p = V.planCanvas(1672, 941, 10, { mode: "native" });
@@ -23,9 +25,11 @@ test("fit mode downsamples to the 2048 cap but never upscales", () => {
   assert.equal(big.W, 3640); // round(4000*2048/2250)=3641 -> floor to multiple of 10
   assert.equal(big.sw, 364);
   assert.equal(big.cropX, 0); // 3641-3640 = 1 -> floor(1/2) = 0
+  assert.equal(big.scaleW, 3641); // pre-crop resampled width the app must draw
   const small = V.planCanvas(1672, 941, 10, { mode: "fit", maxHeight: 2048 });
   assert.equal(small.H, 941); // below cap: untouched
   assert.equal(small.W, 1670);
+  assert.equal(small.scaleW, 1672); // native scale, crop 1px each side
 });
 
 test("plan width is always divisible by N across a spread of sizes", () => {

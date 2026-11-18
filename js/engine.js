@@ -43,7 +43,10 @@
       throw new Error("too narrow: strips would be under 4 px wide; use fewer strips");
     }
 
-    return { W: W, H: H, sw: W / N, N: N, cropX: cropX, mode: mode, srcW: srcW, srcH: srcH };
+    return {
+      W: W, H: H, sw: W / N, N: N, cropX: cropX, scaleW: scaleW,
+      mode: mode, srcW: srcW, srcH: srcH,
+    };
   }
 
   // Slice rectangles in SOURCE coordinates.
