@@ -32,6 +32,7 @@ const dom = new JSDOM(html, {
       imageSmoothingQuality: "",
     };
     w.HTMLCanvasElement.prototype.getContext = function () { return { ...ctxStub, canvas: this }; };
+    w.HTMLCanvasElement.prototype.toDataURL = function () { return "data:image/png;base64,AAAA"; };
     w.URL.createObjectURL = function () { return "blob:fake"; };
     w.URL.revokeObjectURL = function () {};
     w.HTMLAnchorElement.prototype.click = function () {};
@@ -61,7 +62,13 @@ test("drop a file -> workbench opens, render path runs without errors", () => {
   const ev = new w.Event("drop", { bubbles: true });
   Object.defineProperty(ev, "dataTransfer", { value: { files: [fakeFile] } });
   d.getElementById("dropZone").dispatchEvent(ev);
+  // jsdom can't decode blob: URLs, so the real onload never fires here;
+  // drive render() through the test hook with a stub image instead565 stub image
+  assert.ok(w.VenetianApp, "app exposes test hook");
+  w.VenetianApp.state.img = { naturalWidth: 1672, naturalHeight: 941 };
+  w.VenetianApp.render();
   assert.equal(d.getElementById("workbench").hidden, false, "workbench visible after drop");
+  assert.match(d.getElementById("geometry").textContent, /10 strips of 167\u00d7941/);
   assertNoErrors();
 });
 
@@ -79,11 +86,20 @@ test("gap slider updates the readout", () => {
   gap.value = "4";
   gap.dispatchEvent(new w.Event("input", { bubbles: true }));
   assert.equal(d.getElementById("gapRead").textContent, "4px");
+  // the gap must actually reach the preview stage
+  w.VenetianApp.state.img = { naturalWidth: 1672, naturalHeight: 941 };
+  w.VenetianApp.render();
+  assert.equal(d.getElementById("stripStage").style.gap, "4px", "stage gap applied");
   assertNoErrors();
 });
 
 test("download click runs the export path (stubbed canvas) without errors", () => {
+  // load a stub image first so the export path actually runs
+  w.VenetianApp.state.img = { naturalWidth: 1672, naturalHeight: 941 };
+  w.VenetianApp.render();
+  assert.ok(w.VenetianZip, "zip module is loaded on the page");
   const dl = d.getElementById("downloadBtn");
+  assert.equal(dl.disabled, false, "download enabled after render");
   dl.click();
   assertNoErrors();
 });

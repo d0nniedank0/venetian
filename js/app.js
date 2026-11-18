@@ -120,6 +120,9 @@ if (typeof document !== "undefined") {
         " \u2192 " + plan.N + " strips of " + plan.sw + "\u00d7" + plan.H +
         (x0 !== plan.cropX ? " (crop shifted " + (x0 - plan.cropX >= 0 ? "+" : "") + (x0 - plan.cropX) + "px to dodge detail)" : "");
 
+      // a successful render reveals the workbench
+      show(els.bench, true);
+
       state.plan = plan;
       state.strips = strips;
       state.canvas = c;
@@ -131,14 +134,17 @@ if (typeof document !== "undefined") {
     function paintPreview() {
       els.stage.innerHTML = "";
       if (!state.strips) return;
+      var n = state.strips.length;
+      els.stage.style.gap = state.gap + "px";
       state.strips.forEach(function (strip) {
         var sc = document.createElement("canvas");
         sc.width = strip.width; sc.height = strip.height;
         sc.getContext("2d").putImageData(strip, 0, 0);
         var im = document.createElement("img");
         im.src = sc.toDataURL("image/png");
-        im.style.width = "calc(" + (100 / state.strips.length) + "% - 2px)";
-        im.style.maxHeight = "420px";
+        im.alt = "strip";
+        // width accounts for total gap so strips never wrap or overflow
+        im.style.width = "calc((100% - " + ((n - 1) * state.gap) + "px) / " + n + ")";
         els.stage.appendChild(im);
       });
     }
