@@ -6,16 +6,27 @@ image on an X multi-photo post — the "scroll-across" effect from
 
 **Everything runs in your browser. No server, no upload, no tracking.**
 
-## Run locally
-Open `index.html`, or `python -m http.server` in this folder and visit
-`http://localhost:8000`.
+## Run
+No build, no install for the app itself: open `index.html` (double-click works —
+everything is client-side).
 
 ## Tests
+`node_modules` must NOT live in this folder — the Google Drive sync corrupts it
+(`ERR_INVALID_PACKAGE_CONFIG`). Use the off-Drive mirror:
+
+```bash
+L="$LOCALAPPDATA/Temp/venetian-local"
+rm -rf "$L" && mkdir -p "$L"
+cp index.html README.md package.json package-lock.json "$L/"
+cp -r js css test "$L/"
+cd "$L" && npm install
+node --test test/engine.test.js   # 17 engine tests
+node --test test/ui.test.js      # 6 jsdom UI tests
+node test/e2e-slice.js           # real PNG through the pipeline, pixel-diff reassembly
+node test/make-zip.js && python test/verify-zip.py   # ZIP vs a real extractor
 ```
-npm install
-node --test test/engine.test.js
-```
-(plus `test/ui.test.js` — jsdom UI suite — once the UI slice lands)
+
+After editing files on Drive, re-copy them into `$L` before testing.
 
 ## How it works
 - **Height is the hard cap.** X stores originals at up to 2048 px tall; fit
@@ -28,4 +39,7 @@ node --test test/engine.test.js
 - **Upload order is the effect.** Files come out numbered `01..N`; X can't
   reorder photos after posting.
 
+## Credits
 Not affiliated with X. Built by CHΛOS.
+
+[note: i read README.md before this edit]
