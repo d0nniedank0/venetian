@@ -38,7 +38,7 @@ if (typeof document !== "undefined") {
 
     // ---- source intake ----
     function takeFile(file) {
-      if (!file || !/^image\//.test(file.type)) { els.hint.textContent = "That's not a picture — try a PNG or JPG."; return; }
+      if (!file || !/^image\//.test(file.type)) { els.hint.textContent = "That's not a picture. Try a PNG or JPG."; return; }
       state.name = stem(file.name);
       var url = URL.createObjectURL(file);
       var img = new Image();
@@ -128,7 +128,7 @@ if (typeof document !== "undefined") {
       state.canvas = c;
       paintPreview();
       els.dl.disabled = false;
-      els.note.textContent = "Files are numbered; upload order is the effect — X can't reorder after posting.";
+      els.note.textContent = "Files are numbered; upload order is the effect. X can't reorder after posting.";
     }
 
     function paintPreview() {

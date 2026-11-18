@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Venetian — slice a picture into one X post</title>
-<meta name="description" content="Cut any picture into numbered vertical strips that reassemble into a single image on an X multi-photo post. Everything runs in your browser — no upload, no server.">
+<title>Venetian: slice a picture into one X post</title>
+<meta name="description" content="Cut any picture into numbered vertical strips that reassemble into a single image on an X multi-photo post. Everything runs in your browser. No upload, no server.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎞️</text></svg>">
-<meta property="og:title" content="Venetian — slice a picture into one X post">
+<meta property="og:title" content="Venetian: slice a picture into one X post">
 <meta property="og:description" content="Cut any picture into numbered vertical strips that reassemble into a single image on an X multi-photo post. Runs entirely in your browser.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#25236b">
@@ -25,16 +25,16 @@
     <p class="kicker">What this is</p>
     <p class="guide-copy">
       X supports up to 20 images per post. Upload <em>one wide picture, cut into vertical strips,
-      in order</em>, and the multi-photo grid stitches them back into a single poster —
+      in order</em>, and the multi-photo grid stitches them back into a single poster,
       a scroll-across effect people will ask you about. Venetian does the cutting:
       the geometry that makes the seams invisible, and nothing else.
     </p>
     <ol class="steps">
       <li><strong>Drop a wide picture</strong> (roughly 8:5 or wider works best).</li>
-      <li><strong>Pick a strip count</strong> — 10 is the sweet spot; 20 is the venetian-blind look.</li>
+      <li><strong>Pick a strip count.</strong> 10 is the sweet spot; 20 is the venetian-blind look.</li>
       <li><strong>Download the ZIP</strong> and drag the numbered files into the X composer <em>in order</em>.</li>
     </ol>
-    <p class="privacy-note">Your image never leaves this page — all slicing happens locally in your browser.</p>
+    <p class="privacy-note">Your image never leaves this page. All slicing happens locally in your browser.</p>
   </section>
 
   <section class="drop-zone" id="dropZone" aria-label="Choose a picture">
@@ -42,7 +42,7 @@
       <p class="drop-hint" id="dropHint">Drop a picture here, or</p>
       <label class="file-label" for="fileInput">browse for a file</label>
       <input type="file" id="fileInput" accept="image/*" hidden>
-      <p class="drop-formats">PNG · JPG · WEBP — anything your browser can decode</p>
+      <p class="drop-formats">PNG · JPG · WEBP. Anything your browser can decode.</p>
     </div>
   </section>
 
@@ -63,7 +63,7 @@
           <label for="modeSel">Resolution</label>
           <select id="modeSel">
             <option value="fit" selected>Fit X's 2048 px cap (recommended)</option>
-            <option value="native">Native pixels — no resampling</option>
+            <option value="native">Native pixels, no resampling</option>
           </select>
         </div>
       </div>
@@ -90,7 +90,7 @@
 
     <div class="export card">
       <button type="button" class="primary-btn" id="downloadBtn">Download ZIP (01 → N, in order)</button>
-      <p class="export-note" id="exportNote">Files are numbered; upload order is the effect — X can't reorder after posting.</p>
+      <p class="export-note" id="exportNote">Files are numbered; upload order is the effect. X can't reorder after posting.</p>
     </div>
 
   </section>
