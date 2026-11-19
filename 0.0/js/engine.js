@@ -25,14 +25,6 @@
     if (!Number.isFinite(srcW) || srcW < 1) throw new Error("invalid width");
     if (!Number.isFinite(srcH) || srcH < 1) throw new Error("invalid height");
 
-    var aspect = null;
-    if (opts.aspect !== undefined && opts.aspect !== null) {
-      if (!Number.isFinite(opts.aspect) || opts.aspect <= 0) {
-        throw new Error("aspect must be a positive number");
-      }
-      aspect = opts.aspect;
-    }
-
     var H, scaleW, mode = opts.mode || "native";
     if (mode === "fit") {
       var maxH = Number.isFinite(opts.maxHeight) ? opts.maxHeight : X_MAX_HEIGHT;
@@ -44,15 +36,7 @@
       scaleW = srcW;
     }
 
-    // If an aspect is requested, cap the canvas width to W/H = aspect,
-    // center-cropping the source. Never upscale past the source width.
-    var W = scaleW;
-    if (aspect !== null) {
-      var targetW = Math.round(H * aspect);
-      W = Math.min(targetW, scaleW);
-    }
-
-    W = Math.floor(W / N) * N; // divisible by N
+    var W = Math.floor(scaleW / N) * N; // divisible by N
     var cropX = Math.floor((scaleW - W) / 2); // centered, never negative
 
     if (W / N < 4) {
@@ -61,7 +45,7 @@
 
     return {
       W: W, H: H, sw: W / N, N: N, cropX: cropX, scaleW: scaleW,
-      mode: mode, srcW: srcW, srcH: srcH, aspect: aspect,
+      mode: mode, srcW: srcW, srcH: srcH,
     };
   }
 
@@ -123,18 +107,7 @@
         "Strips are only " + plan.sw + "px wide — fine detail or text will slice mid-glyph."
       );
     }
-    if (plan.aspect !== null) {
-      if (plan.W < plan.scaleW) {
-        var pct = Math.round((plan.W / plan.scaleW) * 100);
-        out.push(
-          "Center-cropped to " + pct + "% of the image width to hit the requested shape; the sides are discarded."
-        );
-      } else {
-        out.push(
-          "Source is narrower than the requested shape; keeping full width."
-        );
-      }
-    } else if (plan.W / plan.H < 0.8) {
+    if (plan.W / plan.H < 0.8) {
       out.push(
         "Canvas is " + (plan.W / plan.H).toFixed(2) + ":1 — portrait posters read worse sliced; wide art works best."
       );

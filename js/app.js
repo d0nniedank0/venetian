@@ -16,6 +16,7 @@ if (typeof document !== "undefined") {
       seg: document.getElementById("stripSeg"),
       count: document.getElementById("stripCount"),
       mode: document.getElementById("modeSel"),
+      aspect: document.getElementById("aspectSel"),
       gap: document.getElementById("gapRange"),
       gapRead: document.getElementById("gapRead"),
       seam: document.getElementById("seamShift"),
@@ -26,7 +27,7 @@ if (typeof document !== "undefined") {
       note: document.getElementById("exportNote"),
     };
 
-    var state = { img: null, name: "strips", N: 10, mode: "fit", gap: 1, shift: true };
+    var state = { img: null, name: "strips", N: 10, mode: "fit", aspect: null, gap: 1, shift: true };
 
     // helpers
     function stem(name) {
@@ -64,6 +65,7 @@ if (typeof document !== "undefined") {
     });
     els.count.addEventListener("change", sync);
     els.mode.addEventListener("change", sync);
+    els.aspect.addEventListener("change", sync);
     els.gap.addEventListener("input", function () { state.gap = +els.gap.value; els.gapRead.textContent = state.gap + "px"; paintPreview(); });
     els.seam.addEventListener("change", sync);
 
@@ -75,6 +77,7 @@ if (typeof document !== "undefined") {
         b.setAttribute("aria-pressed", b.dataset.n === String(n) ? "true" : "false");
       });
       state.mode = els.mode.value;
+      state.aspect = els.aspect.value === "panorama" ? null : parseFloat(els.aspect.value);
       state.shift = els.seam.checked;
       if (state.img) render();
     }
@@ -84,7 +87,7 @@ if (typeof document !== "undefined") {
       var img = state.img;
       var plan;
       try {
-        plan = V.planCanvas(img.naturalWidth, img.naturalHeight, state.N, { mode: state.mode });
+        plan = V.planCanvas(img.naturalWidth, img.naturalHeight, state.N, { mode: state.mode, aspect: state.aspect });
       } catch (err) {
         els.geo.textContent = "Can't slice this: " + err.message;
         return;
@@ -118,6 +121,7 @@ if (typeof document !== "undefined") {
       els.geo.textContent =
         "source " + img.naturalWidth + "\u00d7" + img.naturalHeight +
         " \u2192 " + plan.N + " strips of " + plan.sw + "\u00d7" + plan.H +
+        " \u00b7 composite " + plan.W + "\u00d7" + plan.H + " (" + (plan.W / plan.H).toFixed(2) + ":1)" +
         (x0 !== plan.cropX ? " (crop shifted " + (x0 - plan.cropX >= 0 ? "+" : "") + (x0 - plan.cropX) + "px to dodge detail)" : "");
 
       // a successful render reveals the workbench

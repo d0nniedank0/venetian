@@ -103,20 +103,6 @@ test("gap slider updates the readout", () => {
   assertNoErrors();
 });
 
-test("shape selector crops a wide source to the requested ratio", () => {
-  const aspect = d.getElementById("aspectSel");
-  aspect.value = "0.75";
-  aspect.dispatchEvent(new w.Event("change", { bubbles: true }));
-  w.VenetianApp.state.img = { naturalWidth: 4000, naturalHeight: 2000 };
-  w.VenetianApp.render();
-  assert.match(d.getElementById("geometry").textContent, /0\.75:1/);
-  assert.match(d.getElementById("warnings").textContent, /Center-cropped/);
-  // restore the panorama default for later tests
-  aspect.value = "panorama";
-  aspect.dispatchEvent(new w.Event("change", { bubbles: true }));
-  assertNoErrors();
-});
-
 test("download click runs the export path (stubbed canvas) without errors", () => {
   // load a stub image first so the export path actually runs
   w.VenetianApp.state.img = { naturalWidth: 1672, naturalHeight: 941 };

@@ -46,8 +46,8 @@
       the geometry that makes the seams invisible, and nothing else.
     </p>
     <ol class="steps">
-      <li><strong>Drop a wide picture</strong> (roughly 8:5 or wider works best).</li>
-      <li><strong>Pick a strip count.</strong> 10 is the sweet spot; 20 is the venetian-blind look.</li>
+      <li><strong>Drop a picture</strong>, wide for a panorama or portrait for a poster.</li>
+      <li><strong>Pick a strip count and shape.</strong> 10 strips is the sweet spot; Poster 3:4 fits the whole picture with no scrolling.</li>
       <li><strong>Download the ZIP</strong> and drag the numbered files into the X composer <em>in order</em>.</li>
     </ol>
     <p class="privacy-note">Your image never leaves this page. All slicing happens locally in your browser.</p>
@@ -80,6 +80,15 @@
           <select id="modeSel">
             <option value="fit" selected>Fit X's 2048 px cap (recommended)</option>
             <option value="native">Native pixels, no resampling</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="aspectSel">Shape</label>
+          <select id="aspectSel">
+            <option value="panorama" selected>Panorama (full width)</option>
+            <option value="0.75">Poster 3:4 (no scroll)</option>
+            <option value="0.8">Poster 4:5</option>
+            <option value="1">Square 1:1</option>
           </select>
         </div>
       </div>

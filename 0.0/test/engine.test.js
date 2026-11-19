@@ -203,50 +203,6 @@ test("buildZip rejects empty or malformed file lists", () => {
   assert.throws(() => V.buildZip([{ data: new Uint8Array([1]) }]), /name/i);
 });
 
-test("aspect: poster shape targets a composite ratio with exact divisibility", () => {
-  // user's album post: 10 strips of 154 -> 1540x2048 = 0.752
-  const p = V.planCanvas(1540, 2048, 10, { mode: "fit", aspect: 0.752 });
-  assert.equal(p.H, 2048);
-  assert.equal(p.W, 1540);
-  assert.equal(p.sw, 154);
-  assert.equal(p.cropX, 0);
-});
-
-test("aspect: wide source is center-cropped to the requested shape", () => {
-  const p = V.planCanvas(4000, 2000, 10, { mode: "fit", aspect: 0.75 });
-  assert.equal(p.H, 2000);
-  assert.equal(p.scaleW, 4000);
-  assert.equal(p.W, 1500);
-  assert.equal(p.sw, 150);
-  assert.equal(p.cropX, 1250); // (4000-1500)/2
-  assert.ok(p.W < p.scaleW, "cropped, not padded");
-});
-
-test("aspect: never upscales past source width, keeps divisibility", () => {
-  const p = V.planCanvas(1000, 1000, 3, { mode: "fit", aspect: 1.0 });
-  assert.equal(p.W, 999); // floor(1000/3)*3
-  assert.equal(p.W % 3, 0);
-  assert.equal(p.sw, 333);
-});
-
-test("aspect: narrow source clamps to full width and warns", () => {
-  const p = V.planCanvas(800, 2000, 10, { mode: "fit", aspect: 0.75 });
-  assert.equal(p.W, 800);
-  assert.equal(p.sw, 80);
-  assert.equal(p.cropX, 0);
-  assert.ok(V.warnings(p).some((w) => /narrower/.test(w) || /shape/.test(w)));
-});
-
-test("aspect: crop warning when source is wider than the target shape", () => {
-  const p = V.planCanvas(4000, 2000, 10, { mode: "fit", aspect: 0.75 });
-  assert.ok(V.warnings(p).some((w) => /crop/i.test(w)));
-});
-
-test("aspect rejects a non-positive value", () => {
-  assert.throws(() => V.planCanvas(2000, 2000, 10, { mode: "fit", aspect: 0 }), /aspect/);
-  assert.throws(() => V.planCanvas(2000, 2000, 10, { mode: "fit", aspect: -1 }), /aspect/);
-});
-
 test("warnings flag very narrow strips and uncapped tall sources", () => {
   const portrait = V.planCanvas(400, 4000, 10, { mode: "fit", maxHeight: 2048 });
   assert.ok(V.warnings(portrait).length > 0, "portrait poster should warn");
