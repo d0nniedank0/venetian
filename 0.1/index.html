@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venetian: slice a picture into one X post</title>
+<meta name="description" content="Cut any picture into numbered vertical strips that reassemble into a single image on an X multi-photo post. Everything runs in your browser. No upload, no server.">
+<link rel="icon" href="assets/venetian-mark.svg" type="image/svg+xml">
+<meta property="og:title" content="Venetian: slice a picture into one X post">
+<meta property="og:description" content="Cut any picture into numbered vertical strips that reassemble into a single image on an X multi-photo post. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://venetiancut.pages.dev/">
+<meta property="og:image" content="https://venetiancut.pages.dev/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Venetian: slice a picture into strips that reassemble into one image on an X post.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://venetiancut.pages.dev/assets/og-card.png">
+<meta name="theme-color" content="#25236b">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand-lockup">
+    <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <rect x="1" y="1" width="38" height="38" rx="9" stroke="#25236b" stroke-width="1.5"/>
+      <path class="slat" fill="#25236b" d="M8 9h4v22H8z"/>
+      <path class="slat" fill="#25236b" d="M15 9h4v22h-4z"/>
+      <path class="slat" fill="#25236b" d="M22 9h4v22h-4z"/>
+      <path class="slat" fill="#c84022" d="M29 9h4v22h-4z"/>
+    </svg>
+    <h1 class="logo wordmark">Venetian</h1>
+  </div>
+  <p class="tagline">Slice a picture into strips that reassemble into one image on an X multi-photo post.</p>
+</header>
+
+<main class="view-inner">
+
+  <section class="guide" aria-label="What this is">
+    <p class="kicker">What this is</p>
+    <p class="guide-copy">
+      X supports up to 20 images per post. Upload <em>one wide picture, cut into vertical strips,
+      in order</em>, and the multi-photo grid stitches them back into a single poster,
+      a scroll-across effect people will ask you about. Venetian does the cutting:
+      the geometry that makes the seams invisible, and nothing else.
+    </p>
+    <ol class="steps">
+      <li><strong>Drop a picture</strong>, wide for a panorama or portrait for a poster.</li>
+      <li><strong>Pick a strip count and shape.</strong> 10 strips is the sweet spot; Poster 3:4 fits the whole picture with no scrolling.</li>
+      <li><strong>Download the ZIP</strong> and drag the numbered files into the X composer <em>in order</em>.</li>
+    </ol>
+    <p class="privacy-note">Your image never leaves this page. All slicing happens locally in your browser.</p>
+  </section>
+
+  <section class="drop-zone" id="dropZone" aria-label="Choose a picture">
+    <div class="drop-inner">
+      <p class="drop-hint" id="dropHint">Drop a picture here, or</p>
+      <label class="file-label" for="fileInput">browse for a file</label>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+      <p class="drop-formats">PNG · JPG · WEBP. Anything your browser can decode.</p>
+    </div>
+  </section>
+
+  <section class="workbench" id="workbench" hidden>
+
+    <div class="controls card">
+      <div class="control-row">
+        <div class="control">
+          <label for="stripCount">Strips</label>
+          <div class="seg" id="stripSeg" role="radiogroup" aria-label="Strip count">
+            <button type="button" class="seg-btn" data-n="4">4</button>
+            <button type="button" class="seg-btn" data-n="10" aria-pressed="true">10</button>
+            <button type="button" class="seg-btn" data-n="20">20</button>
+            <input type="number" id="stripCount" min="2" max="20" step="1" value="10" aria-label="Custom strip count">
+          </div>
+        </div>
+        <div class="control">
+          <label for="modeSel">Resolution</label>
+          <select id="modeSel">
+            <option value="fit" selected>Fit X's 2048 px cap (recommended)</option>
+            <option value="native">Native pixels, no resampling</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="aspectSel">Shape</label>
+          <select id="aspectSel">
+            <option value="panorama" selected>Panorama (full width)</option>
+            <option value="0.75">Poster 3:4 (no scroll)</option>
+            <option value="0.8">Poster 4:5</option>
+            <option value="1">Square 1:1</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="gapRange">Preview gap <span class="hint" id="gapRead">1px</span></label>
+          <input type="range" id="gapRange" min="0" max="6" step="1" value="1">
+        </div>
+        <div class="control seam-toggle">
+          <label id="seamLabel">
+            <input type="checkbox" id="seamShift" checked>
+            <span>Seam-aware cut <span class="hint">shifts the crop so boundaries miss detail</span></span>
+          </label>
+        </div>
+      </div>
+      <p class="warnings" id="warnings" hidden></p>
+    </div>
+
+    <div class="preview card">
+      <p class="kicker">How it will read in the grid</p>
+      <div class="strip-stage" id="stripStage" aria-label="Preview of strips side by side"></div>
+      <p class="geometry" id="geometry"></p>
+    </div>
+
+    <div class="export card">
+      <button type="button" class="primary-btn" id="downloadBtn">Download ZIP (01 → N, in order)</button>
+      <p class="export-note" id="exportNote">Files are numbered; upload order is the effect. X can't reorder after posting.</p>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span class="credit">built by <span class="brand">CHΛOS</span> — <a href="https://x.com/daanisharif" rel="noopener">@daanisharif</a></span>
+  <span class="disarm">not affiliated with X. your pictures never leave your browser.</span>
+</footer>
+
+<script src="js/engine.js" defer></script>
+<script src="js/zip.js" defer></script>
+<script src="js/app.js" defer></script>
+</body>
+</html>
