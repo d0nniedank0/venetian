@@ -117,6 +117,20 @@ test("shape selector crops a wide source to the requested ratio", () => {
   assertNoErrors();
 });
 
+test("preview strips keep their aspect ratio (no stretching)", () => {
+  const s = w.VenetianApp.state;
+  s.img = { naturalWidth: 4000, naturalHeight: 2000 };
+  s.N = 10; s.mode = "fit"; s.aspect = null; s.shift = true;
+  w.VenetianApp.render();
+  const im = d.querySelector("#stripStage img");
+  assert.ok(im, "preview img exists");
+  const wpx = parseFloat(im.style.width), hpx = parseFloat(im.style.height);
+  assert.ok(wpx > 0 && hpx > 0, "explicit pixel sizing on preview");
+  // strip ratio is H/sw = 2000/400 = 5; a stretched render would break this
+  assert.ok(Math.abs(hpx / wpx - 5.0) < 0.05, `aspect preserved (got ${(hpx / wpx).toFixed(2)})`);
+  assertNoErrors();
+});
+
 test("download click runs the export path (stubbed canvas) without errors", () => {
   // load a stub image first so the export path actually runs
   w.VenetianApp.state.img = { naturalWidth: 1672, naturalHeight: 941 };

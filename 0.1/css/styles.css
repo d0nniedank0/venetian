@@ -213,9 +213,6 @@ input[type="range"] {
 }
 .strip-stage img {
   display: block;
-  height: auto;
-  max-height: 420px;
-  width: auto;
   flex: 0 0 auto;
   pointer-events: none;
 }

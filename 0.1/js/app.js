@@ -140,6 +140,8 @@ if (typeof document !== "undefined") {
       if (!state.strips) return;
       var n = state.strips.length;
       els.stage.style.gap = state.gap + "px";
+      var H = state.plan.H, sw = state.plan.sw;
+      var scale = Math.min(1, 420 / H); // one uniform scale; never distorts
       state.strips.forEach(function (strip) {
         var sc = document.createElement("canvas");
         sc.width = strip.width; sc.height = strip.height;
@@ -147,8 +149,8 @@ if (typeof document !== "undefined") {
         var im = document.createElement("img");
         im.src = sc.toDataURL("image/png");
         im.alt = "strip";
-        // width accounts for total gap so strips never wrap or overflow
-        im.style.width = "calc((100% - " + ((n - 1) * state.gap) + "px) / " + n + ")";
+        im.style.width = Math.round(sw * scale) + "px";
+        im.style.height = Math.round(H * scale) + "px";
         els.stage.appendChild(im);
       });
     }
